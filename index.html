@@ -19,10 +19,12 @@
     @media (max-width: 860px) {
       header[data-screen-label="Hero"] { grid-template-columns: 1fr !important; gap: 36px !important; padding: 32px 0 56px !important; }
       header[data-screen-label="Hero"] h1 { font-size: 38px !important; }
-      header[data-screen-label="Hero"] > div:last-child { justify-self: start !important; }
+      header[data-screen-label="Hero"] > div:last-child { justify-self: center !important; }
       header[data-screen-label="Hero"] > div:last-child > div.washed { width: min(300px, 80vw) !important; height: 370px !important; }
       nav.nav { flex-wrap: wrap !important; gap: 12px !important; }
-      nav.nav > div { gap: 16px !important; flex-wrap: wrap !important; font-size: 14px; }
+      nav.nav > div { gap: 8px !important; flex-wrap: wrap !important; }
+      nav.nav > div > a:not(.btn) { font-size: 14px; font-weight: 600; padding: 8px 16px; border-radius: 999px; background: var(--color-accent-100); color: var(--color-accent-800); }
+      nav.nav a.btn-primary { display: none !important; }
       section[id] { padding: 28px 0 48px !important; }
       #experience .card { grid-template-columns: 1fr !important; gap: 14px !important; padding: 24px !important; }
       #projects > div { grid-template-columns: 1fr !important; }
