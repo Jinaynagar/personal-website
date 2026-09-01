@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>The Long Game — Jinay Nagar</title>
+<meta name="description" content="A five-year run to $1M ARR, tracked.">
+<link rel="stylesheet" href="/styles.css">
+<style>
+/* Page-specific layout. Colour, type and component classes come from styles.css. */
+.shell{max-width:1120px;margin:0 auto;padding:0 clamp(18px,4vw,32px);}
+.nav{padding:22px 0;}
+.nav .spacer{margin-right:auto;}
+
+.hero{padding:48px 0 8px;}
+.hero h1{font-size:clamp(34px,6vw,52px);max-width:16ch;margin:14px 0 18px;}
+.hero p.lede{font-size:17px;max-width:54ch;color:var(--color-neutral-800);}
+
+.figure{margin-top:34px;}
+.figure svg{width:100%;height:auto;display:block;overflow:visible;}
+.track{fill:none;stroke:var(--color-divider);stroke-width:2;stroke-dasharray:3 6;}
+.trail{fill:none;stroke:var(--color-accent);stroke-width:3;stroke-linejoin:round;stroke-linecap:round;}
+.baseline{stroke:var(--color-divider);stroke-width:1;}
+.node circle{fill:var(--color-bg);stroke:var(--color-neutral-400);stroke-width:2;}
+.node.live circle{stroke:var(--color-accent);}
+.node.clear circle{fill:var(--color-accent-2);stroke:var(--color-accent-2);}
+.roman{fill:var(--color-neutral-500);font-family:var(--font-heading);font-size:13px;text-anchor:middle;}
+.node.live .roman{fill:var(--color-accent);}
+.node.clear .roman{fill:var(--color-accent-2-700);}
+.nlabel{fill:var(--color-neutral-500);font-family:var(--font-body);font-size:10px;text-anchor:middle;}
+.endlabel{fill:var(--color-text);font-family:var(--font-heading);font-size:14px;text-anchor:end;}
+.marker circle{fill:none;stroke:var(--color-accent);stroke-width:2;}
+.marker .core{fill:var(--color-accent);}
+
+.scoreline{display:flex;gap:44px;flex-wrap:wrap;margin-top:26px;padding-top:22px;
+  border-top:1px solid var(--color-divider);}
+.score{display:flex;flex-direction:column;gap:2px;}
+.score b{font-family:var(--font-heading);font-weight:var(--font-heading-weight);font-size:30px;line-height:1.1;}
+.score span{font-size:13px;color:color-mix(in srgb,var(--color-text) 55%,transparent);}
+
+section.block{padding:48px 0 8px;}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:26px;align-items:start;}
+@media (max-width:860px){.two{grid-template-columns:1fr;}}
+
+/* acts */
+.acts{list-style:none;margin:26px 0 0;padding:0;display:flex;flex-direction:column;gap:14px;}
+.act{padding:0;overflow:hidden;}
+.act.locked{opacity:.5;}
+.act-head{display:flex;align-items:center;gap:18px;width:100%;text-align:left;cursor:pointer;
+  background:none;border:none;font:inherit;color:inherit;padding:24px 30px;}
+.act-head:disabled{cursor:default;}
+.act-roman{flex:none;width:34px;font-family:var(--font-heading);font-size:20px;color:var(--color-neutral-400);}
+.act.live .act-roman{color:var(--color-accent);}
+.act.clear .act-roman{color:var(--color-accent-2-700);}
+.act-mid{flex:1;min-width:0;}
+.act-name{font-family:var(--font-heading);font-weight:var(--font-heading-weight);font-size:20px;line-height:1.2;}
+.act.clear .act-name{text-decoration:line-through;text-decoration-color:var(--color-accent-2);}
+.act-when{font-size:12.5px;color:color-mix(in srgb,var(--color-text) 52%,transparent);margin-top:4px;}
+.act-body{padding:0 30px 26px 82px;}
+@media (max-width:640px){.act-head{padding:20px;gap:12px;}.act-body{padding:0 20px 22px;}}
+.thesis{font-size:14.5px;line-height:1.6;max-width:66ch;margin-bottom:var(--space-3);}
+.boss{background:var(--color-accent-100);border-radius:var(--radius-md);
+  padding:16px 20px;margin-bottom:var(--space-3);}
+.boss p{margin:6px 0 0;font-size:13.5px;line-height:1.55;color:var(--color-accent-900);max-width:64ch;}
+
+/* checkable rows */
+.rows{list-style:none;margin:0;padding:0;}
+.rows li + li{border-top:1px solid color-mix(in srgb,var(--color-text) 8%,transparent);}
+.row{display:flex;align-items:flex-start;gap:12px;width:100%;text-align:left;cursor:pointer;
+  background:none;border:none;font:inherit;color:inherit;padding:12px 0;}
+.tick{flex:none;width:18px;height:18px;margin-top:2px;border-radius:50%;
+  border:1.5px solid var(--color-divider);}
+.row:hover .tick{border-color:var(--color-accent);}
+.row.on .tick{background:var(--color-accent);border-color:var(--color-accent);
+  box-shadow:inset 0 0 0 4px var(--color-bg);}
+.row.gate.on .tick{background:var(--color-accent-2);border-color:var(--color-accent-2);}
+.row .label{flex:1;font-size:14px;line-height:1.5;}
+.row:not(.on) .label{color:color-mix(in srgb,var(--color-text) 68%,transparent);}
+.row .pts{flex:none;font-size:11px;color:color-mix(in srgb,var(--color-text) 40%,transparent);margin-top:3px;}
+.row.on .pts{color:var(--color-accent);}
+
+/* dark loop panel, echoing the Content section on the homepage */
+.loop-panel{background:var(--color-accent-2-800);color:var(--color-accent-2-100);
+  padding:40px 42px;display:grid;grid-template-columns:1.15fr .85fr;gap:36px;align-items:center;}
+@media (max-width:860px){.loop-panel{grid-template-columns:1fr;padding:30px 26px;}}
+.loop-panel h2{color:var(--color-neutral-100);max-width:16ch;}
+.loop-panel .lede{font-size:15px;color:var(--color-accent-2-200);max-width:46ch;}
+.loop-panel .row .label{color:var(--color-accent-2-100);}
+.loop-panel .row .tick{border-color:var(--color-accent-2-500);}
+.loop-panel .row.on .tick{background:var(--color-accent-2-200);border-color:var(--color-accent-2-200);
+  box-shadow:inset 0 0 0 4px var(--color-accent-2-800);}
+.loop-panel .rows li + li{border-top:1px solid var(--color-accent-2-700);}
+.pill{background:var(--color-accent-2-700);border-radius:999px;padding:13px 26px;
+  display:flex;justify-content:space-between;align-items:baseline;gap:12px;}
+.pill span{font-size:14px;}
+.pill b{font-family:var(--font-heading);font-weight:var(--font-heading-weight);font-size:20px;}
+.stack{display:flex;flex-direction:column;gap:12px;}
+
+/* achievements */
+.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:26px;}
+@media (max-width:860px){.grid3{grid-template-columns:repeat(2,1fr);}}
+@media (max-width:520px){.grid3{grid-template-columns:1fr;}}
+.ach{min-height:112px;}
+.ach.off{background:transparent;border:1px dashed var(--color-divider);box-shadow:none;}
+.ach.off .card-title,.ach.off .card-body{color:color-mix(in srgb,var(--color-text) 32%,transparent);}
+
+.foot{display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap;
+  padding:32px 4px 64px;margin-top:32px;border-top:1px solid var(--color-divider);
+  font-size:13px;color:color-mix(in srgb,var(--color-text) 55%,transparent);}
+
+.toast{position:fixed;left:50%;bottom:28px;transform:translateX(-50%);z-index:60;
+  max-width:360px;background:var(--color-accent-2-800);color:var(--color-accent-2-100);
+  padding:18px 24px;border-radius:calc(var(--radius-lg) * 1.15);box-shadow:var(--shadow-lg);
+  animation:rise .34s ease-out;}
+.toast .kick{font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--color-accent-2-300);}
+.toast b{display:block;font-family:var(--font-heading);font-weight:var(--font-heading-weight);
+  font-size:19px;margin:6px 0 4px;}
+.toast p{margin:0;font-size:13px;color:var(--color-accent-2-200);}
+@keyframes rise{from{opacity:0;transform:translate(-50%,16px);}to{opacity:1;transform:translate(-50%,0);}}
+@media (prefers-reduced-motion:reduce){.toast{animation:none;}}
+</style>
+</head>
+<body>
+<div class="shell">
+
+  <nav class="nav">
+    <span class="nav-brand">Jinay Nagar</span>
+    <span class="spacer"></span>
+    <a href="/">Home</a>
+    <a href="/#projects">Projects</a>
+    <a href="/#contact" class="btn btn-primary" style="font-size:14px;">Get in touch</a>
+  </nav>
+
+  <header class="hero">
+    <span class="tag tag-accent-2">Five-year run · 2026 → 2031</span>
+    <h1>The long game, played in public.</h1>
+    <p class="lede">A five-year plan to $1M ARR, broken into acts with gates, bosses and a weekly loop.
+      One big lagging number is a terrible thing to aim at, so this turns it into something with feedback.</p>
+
+    <div class="figure" id="curve"></div>
+
+    <div class="scoreline">
+      <div class="score"><b id="xp">0</b><span id="xptotal">experience</span></div>
+      <div class="score"><b id="actnow">—</b><span>current act</span></div>
+      <div class="score"><b id="streaknum">0</b><span id="streaklabel">week streak</span></div>
+      <div class="score"><b id="achnum">0</b><span>achievements earned</span></div>
+    </div>
+  </header>
+
+  <section class="block">
+    <h6 style="color:var(--color-accent);">The run</h6>
+    <h2 style="max-width:20ch;">Five acts, each gated by a number rather than a date.</h2>
+    <ol class="acts" id="acts"></ol>
+  </section>
+
+  <section class="block">
+    <div class="card loop-panel">
+      <div>
+        <h6 style="color:var(--color-accent-2-300);">The weekly loop</h6>
+        <h2>Revenue is the score. This is the gameplay.</h2>
+        <p class="lede">Three moves a week. Miss two and the streak resets — the only real failure state here.</p>
+        <ul class="rows" id="loop"></ul>
+        <div style="display:flex;gap:10px;margin-top:18px;flex-wrap:wrap;" id="loopactions"></div>
+      </div>
+      <div class="stack" id="loopstats"></div>
+    </div>
+  </section>
+
+  <section class="block">
+    <h6 style="color:var(--color-accent);">Debuffs</h6>
+    <h2 style="max-width:22ch;">The three ways this quietly goes wrong.</h2>
+    <div class="grid3" id="debuffs"></div>
+  </section>
+
+  <section class="block">
+    <h6 style="color:var(--color-accent);">Achievements</h6>
+    <h2 style="max-width:20ch;">Moments worth remembering, not metrics.</h2>
+    <div class="grid3" id="achs"></div>
+  </section>
+
+  <div class="foot">
+    <span id="savemsg">Progress is stored in this browser only. Nobody else sees it.</span>
+    <button class="btn btn-secondary" data-act="reset">Reset the run</button>
+  </div>
+</div>
+<div id="toastslot"></div>
+
+<script>
+/* ---------------- data ---------------- */
+const STATS_UNUSED=null;
+
+const ACTS=[
+{id:"a1",roman:"I",name:"Get paid",window:"Now — Dec 2026",
+ thesis:"No income means no runway, no visa, no experiments. Everything downstream is fantasy until this clears.",
+ boss:"The Silent Inbox",
+ bossNote:"You will send 200 applications and hear nothing. It is not personal, it is the market — but it will feel personal at application 140.",
+ objectives:[
+  {id:"a1o1",text:"Move Hiring Lab out of 'extra curricular' and give it its own section with numbers",xp:20},
+  {id:"a1o2",text:"Point your own outreach agent at 25 founders and hiring managers directly",xp:40},
+  {id:"a1o3",text:"Five first conversations booked",xp:60},
+  {id:"a1o4",text:"Reach a final round somewhere",xp:80},
+  {id:"a1o5",text:"Sign an offer",xp:150,gate:true}]},
+{id:"a2",roman:"II",name:"Learn on someone else's money",window:"2027 — 2028",
+ thesis:"Be inside a seed-to-Series-A company and watch revenue get made up close. Meanwhile rebuild the audience you switched off — it is the only asset that survives job changes, visa changes and failed products.",
+ boss:"Comfort",
+ bossNote:"A salary, a good team, and the goal quietly changes from 'build something' to 'get promoted'. This is how most versions of this plan end. Not with a failure — it just stops being mentioned.",
+ objectives:[
+  {id:"a2o1",text:"First post back online",xp:30},
+  {id:"a2o2",text:"Ten weeks published without a gap",xp:60},
+  {id:"a2o3",text:"Sit in on how a deal actually gets closed at work",xp:50},
+  {id:"a2o4",text:"Someone offers you something you never asked for",xp:80},
+  {id:"a2o5",text:"Fifty weeks published without a gap",xp:180,gate:true}]},
+{id:"a3",roman:"III",name:"First pound from a stranger",window:"2028 — 2029",
+ thesis:"Not a launch. Not a startup. One thing, sold, to someone with no connection to you. Hiring Lab already exists — the default is keep going, and switching should require an argument.",
+ boss:"The 8pm Wall",
+ bossNote:"Full day, then building at night. What breaks here is consistency, not ability.",
+ objectives:[
+  {id:"a3o1",text:"Pick the one thing. Stop starting new ones",xp:40},
+  {id:"a3o2",text:"Charge money before it feels ready",xp:60},
+  {id:"a3o3",text:"First payment from someone you have never met",xp:120},
+  {id:"a3o4",text:"A month where revenue grew while you did nothing",xp:100},
+  {id:"a3o5",text:"Ten paying strangers",xp:200,gate:true}]},
+{id:"a4",roman:"IV",name:"The quit line",window:"2029 — 2030",
+ thesis:"Three consecutive months of side income above your London costs. Not one good month. Three.",
+ boss:"The Leap",
+ bossNote:"You will want certainty. It never arrives, and waiting past the gate is itself a decision.",
+ objectives:[
+  {id:"a4o1",text:"Side income clears rent",xp:100},
+  {id:"a4o2",text:"Clears everything — month one",xp:80},
+  {id:"a4o3",text:"Clears everything — month two",xp:80},
+  {id:"a4o4",text:"Clears everything — month three",xp:80},
+  {id:"a4o5",text:"Hand off something you used to do yourself",xp:120},
+  {id:"a4o6",text:"Resign",xp:250,gate:true}]},
+{id:"a5",roman:"V",name:"One million",window:"2030 — 2031",
+ thesis:"4,000 individuals at £20 a month is a far harder machine than 50 organisations at £20K. Everything in Acts II and III should quietly bias you toward a buyer with a budget.",
+ boss:"Someone Funded",
+ bossNote:"A competitor with money copies your best feature and outspends you on the channel you built. Your defence is the audience, not the code.",
+ objectives:[
+  {id:"a5o1",text:"First contract paid by an organisation, not a person",xp:150},
+  {id:"a5o2",text:"£10K MRR",xp:200},
+  {id:"a5o3",text:"£25K MRR",xp:250},
+  {id:"a5o4",text:"£50K MRR",xp:300},
+  {id:"a5o5",text:"£83K MRR — one million a year",xp:500,gate:true}]}
+];
+
+const ACHIEVEMENTS=[
+ {id:"ach1",name:"First Offer",desc:"The first one changes your posture in every conversation after it.",on:["a1o5"]},
+ {id:"ach2",name:"Back on the Record",desc:"You started publishing again after switching it off.",on:["a2o1"]},
+ {id:"ach3",name:"The Warm Inbox",desc:"Someone came to you.",on:["a2o4"]},
+ {id:"ach4",name:"Fifty Weeks",desc:"A full year that left a public trace.",on:["a2o5"]},
+ {id:"ach5",name:"First Stranger",desc:"Money from outside your network. This is the real starting line.",on:["a3o3"]},
+ {id:"ach6",name:"Ghost Revenue",desc:"It grew while you were asleep.",on:["a3o4"]},
+ {id:"ach7",name:"Ramen",desc:"Your own work covers your rent.",on:["a4o1"]},
+ {id:"ach8",name:"Fire Yourself",desc:"Someone else does a job that used to be yours.",on:["a4o5"]},
+ {id:"ach9",name:"No Safety Net",desc:"You resigned.",on:["a4o6"]},
+ {id:"ach10",name:"Employer Pays",desc:"A budget holder signed, not a job seeker.",on:["a5o1"]},
+ {id:"ach11",name:"Consistency",desc:"Four weeks of the loop, unbroken.",streak:4},
+ {id:"ach12",name:"The Quarter",desc:"Twelve weeks of the loop, unbroken.",streak:12},
+ {id:"ach13",name:"One Million",desc:"Five years. You said you would.",on:["a5o5"]}
+];
+
+const LOOP=[
+ {id:"l1",text:"Talked to one person who could hire you, buy from you, or teach you"},
+ {id:"l2",text:"Shipped one thing"},
+ {id:"l3",text:"Put your work in front of people who had never seen it"}
+];
+
+const DEBUFFS=[
+ {name:"Prestige trap",desc:"Taking the impressive logo over the role where you learn to sell. The logo helps for two years. The skill helps for thirty."},
+ {name:"The invisible year",desc:"Any twelve months that left no public trace. That year did not compound."},
+ {name:"Building as procrastination",desc:"Shipping features gives instant feedback. Selling gives rejection. Guess which one moves the number."}
+];
+
+const TOTAL_XP=ACTS.reduce((s,a)=>s+a.objectives.reduce((t,o)=>t+o.xp,0),0);
+const KEY="longgame:jinay:v1";
+const NODES=[{x:40,y:206},{x:196,y:192},{x:352,y:168},{x:508,y:122},{x:664,y:44},{x:772,y:18}];
+
+/* ---------------- state ---------------- */
+let S={done:{},week:{},streak:0,best:0,open:"a1"};
+let known=null;
+
+function load(){try{const raw=localStorage.getItem(KEY);if(raw)S={...S,...JSON.parse(raw)};return true;}catch(e){return false;}}
+function save(){try{localStorage.setItem(KEY,JSON.stringify(S));return true;}catch(e){return false;}}
+const storageOK=load();
+
+function xpNow(){return ACTS.reduce((s,a)=>s+a.objectives.reduce((t,o)=>t+(S.done[o.id]?o.xp:0),0),0);}
+function actStates(){
+  const out={};let unlocked=true;
+  for(const a of ACTS){
+    const gate=a.objectives.find(o=>o.gate);
+    const hit=a.objectives.filter(o=>S.done[o.id]).length;
+    const cleared=gate?!!S.done[gate.id]:hit===a.objectives.length;
+    out[a.id]={unlocked,hit,total:a.objectives.length,cleared};
+    unlocked=unlocked&&cleared;
+  }
+  return out;
+}
+function achNow(){
+  const s=new Set();
+  for(const a of ACHIEVEMENTS){
+    if(a.on&&a.on.every(o=>S.done[o]))s.add(a.id);
+    if(a.streak&&S.best>=a.streak)s.add(a.id);
+  }
+  return s;
+}
+function pointAt(t){
+  const n=NODES.length-1, sc=Math.min(Math.max(t,0),1)*n;
+  const i=Math.min(Math.floor(sc),n-1), f=sc-i;
+  return{x:NODES[i].x+(NODES[i+1].x-NODES[i].x)*f,y:NODES[i].y+(NODES[i+1].y-NODES[i].y)*f};
+}
+function pathTo(t){
+  const n=NODES.length-1, sc=Math.min(Math.max(t,0),1)*n;
+  const i=Math.min(Math.floor(sc),n-1);
+  const pts=NODES.slice(0,i+1).map(p=>p.x+","+p.y);
+  const e=pointAt(t);pts.push(e.x+","+e.y);
+  return "M "+pts.join(" L ");
+}
+const esc=s=>String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
+
+/* ---------------- render ---------------- */
+function render(){
+  const st=actStates(), xp=xpNow(), prog=xp/TOTAL_XP, m=pointAt(prog), ac=achNow();
+
+  document.getElementById("curve").innerHTML=
+    '<svg viewBox="0 0 820 240" role="img" aria-label="'+Math.round(prog*100)+' percent of the run complete">'
+    +'<line x1="0" y1="222" x2="820" y2="222" class="baseline"/>'
+    +'<path d="M '+NODES.map(p=>p.x+","+p.y).join(" L ")+'" class="track"/>'
+    +'<path d="'+pathTo(prog)+'" class="trail"/>'
+    +ACTS.map((a,i)=>{const s=st[a.id],p=NODES[i];
+      return '<g class="node '+(s.cleared?"clear":s.unlocked?"live":"locked")+'">'
+      +'<circle cx="'+p.x+'" cy="'+p.y+'" r="6"/>'
+      +'<text x="'+p.x+'" y="'+(p.y-18)+'" class="roman">'+a.roman+'</text>'
+      +'<text x="'+p.x+'" y="238" class="nlabel">'+esc(a.window.split(" — ")[0])+'</text></g>';}).join("")
+    +'<g class="marker"><circle cx="'+m.x+'" cy="'+m.y+'" r="10"/>'
+    +'<circle cx="'+m.x+'" cy="'+m.y+'" r="4" class="core"/></g>'
+    +'<text x="800" y="14" class="endlabel">$1M</text></svg>';
+
+  const cur=ACTS.find(a=>!st[a.id].cleared)||ACTS[ACTS.length-1];
+  document.getElementById("xp").textContent=xp.toLocaleString();
+  document.getElementById("xptotal").textContent="of "+TOTAL_XP.toLocaleString()+" experience";
+  document.getElementById("actnow").textContent=cur.roman;
+  document.getElementById("streaknum").textContent=S.streak;
+  document.getElementById("streaklabel").textContent="week streak"+(S.best>S.streak?" · best "+S.best:"");
+  document.getElementById("achnum").textContent=ac.size;
+
+  document.getElementById("acts").innerHTML=ACTS.map(a=>{
+    const s=st[a.id], open=S.open===a.id;
+    let h='<li class="card elev-sm act '+(s.cleared?"clear":s.unlocked?"live":"locked")+'">'
+      +'<button class="act-head" data-act="toggleact" data-id="'+a.id+'" aria-expanded="'+open+'"'+(s.unlocked?"":" disabled")+'>'
+      +'<span class="act-roman">'+a.roman+'</span><span class="act-mid">'
+      +'<span class="act-name">'+esc(a.name)+'</span>'
+      +'<div class="act-when">'+(s.unlocked?esc(a.window):"Locked until the act before it clears")+'</div></span>'
+      +'<span class="tag '+(s.cleared?"tag-accent-2":"tag-neutral")+'">'+s.hit+' / '+s.total+'</span></button>';
+    if(open&&s.unlocked){
+      h+='<div class="act-body"><p class="thesis">'+esc(a.thesis)+'</p>'
+        +'<div class="boss"><div class="card-kicker">Boss · '+esc(a.boss)+'</div><p>'+esc(a.bossNote)+'</p></div>'
+        +'<ul class="rows">'
+        +a.objectives.map(o=>'<li><button class="row'+(S.done[o.id]?" on":"")+(o.gate?" gate":"")+'" data-act="obj" data-id="'+o.id+'" aria-pressed="'+(!!S.done[o.id])+'">'
+        +'<span class="tick" aria-hidden="true"></span><span class="label">'+esc(o.text)
+        +(o.gate?' <span class="tag tag-accent-2" style="margin-left:4px;">gate</span>':"")+'</span>'
+        +'<span class="pts">'+o.xp+'</span></button></li>').join("")
+        +'</ul></div>';
+    }
+    return h+'</li>';
+  }).join("");
+
+  document.getElementById("loop").innerHTML=LOOP.map(l=>
+    '<li><button class="row'+(S.week[l.id]?" on":"")+'" data-act="week" data-id="'+l.id+'" aria-pressed="'+(!!S.week[l.id])+'">'
+    +'<span class="tick" aria-hidden="true"></span><span class="label">'+esc(l.text)+'</span></button></li>').join("");
+
+  const full=LOOP.every(l=>S.week[l.id]);
+  document.getElementById("loopactions").innerHTML=
+    '<button class="btn" data-act="logweek"'+(full?"":" disabled")
+    +' style="background:var(--color-accent-2-100);color:var(--color-accent-2-900);">'
+    +(full?"Log the week":"Finish all three")+'</button>'
+    +(S.streak>0?'<button class="btn" data-act="breakstreak" style="border:1px solid var(--color-accent-2-500);color:var(--color-accent-2-100);">Missed a week</button>':"");
+
+  document.getElementById("loopstats").innerHTML=
+    '<div class="pill"><span>Current streak</span><b>'+S.streak+'</b></div>'
+    +'<div class="pill"><span>Best streak</span><b>'+S.best+'</b></div>'
+    +'<div class="pill"><span>Acts cleared</span><b>'+ACTS.filter(a=>st[a.id].cleared).length+' / 5</b></div>'
+    +'<div class="pill"><span>Run complete</span><b>'+Math.round(prog*100)+'%</b></div>';
+
+  document.getElementById("debuffs").innerHTML=DEBUFFS.map(d=>
+    '<div class="card elev-sm"><div class="card-kicker" style="color:var(--color-accent-700);">Debuff</div>'
+    +'<div class="card-title">'+esc(d.name)+'</div><p class="card-body">'+esc(d.desc)+'</p></div>').join("");
+
+  document.getElementById("achs").innerHTML=ACHIEVEMENTS.map(a=>{
+    const on=ac.has(a.id);
+    return '<div class="card '+(on?"elev-sm ach":"ach off")+'">'
+    +(on?'<span class="tag tag-accent" style="align-self:flex-start;">Earned</span>':'')
+    +'<div class="card-title">'+(on?esc(a.name):"Locked")+'</div>'
+    +'<p class="card-body">'+(on?esc(a.desc):"Keep going.")+'</p></div>';}).join("");
+
+  if(known===null){known=ac;}
+  else{
+    const fresh=[...ac].filter(id=>!known.has(id));
+    known=ac;
+    if(fresh.length)toast(ACHIEVEMENTS.find(x=>x.id===fresh[fresh.length-1]));
+  }
+
+  if(!storageOK)document.getElementById("savemsg").textContent="Your browser is blocking storage, so progress will not be kept.";
+}
+
+let toastTimer;
+function toast(a){
+  if(!a)return;
+  const slot=document.getElementById("toastslot");
+  slot.innerHTML='<div class="toast" role="status"><span class="kick">Achievement unlocked</span>'
+    +'<b>'+esc(a.name)+'</b><p>'+esc(a.desc)+'</p></div>';
+  clearTimeout(toastTimer);
+  toastTimer=setTimeout(()=>{slot.innerHTML="";},4400);
+}
+
+document.addEventListener("click",e=>{
+  const b=e.target.closest("[data-act]");
+  if(!b||b.disabled)return;
+  const act=b.dataset.act, id=b.dataset.id;
+  if(act==="obj")S.done[id]=!S.done[id];
+  else if(act==="week")S.week[id]=!S.week[id];
+  else if(act==="toggleact")S.open=(S.open===id?null:id);
+  else if(act==="logweek"){S.streak+=1;S.best=Math.max(S.best,S.streak);S.week={};}
+  else if(act==="breakstreak")S.streak=0;
+  else if(act==="reset"){
+    if(!confirm("Reset everything? This clears all progress and achievements."))return;
+    S={done:{},week:{},streak:0,best:0,open:"a1"};known=null;
+  }
+  save();render();
+});
+
+render();
+</script>
+</body>
+</html>
