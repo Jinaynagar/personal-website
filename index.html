@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="styles.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root { --font-heading: 'Inter', sans-serif; }
+    h1, h2, h3, h4, h5, h6 { font-weight: 700; letter-spacing: -0.02em; }
+    @media (max-width: 860px) {
+      header[data-screen-label="Hero"] { grid-template-columns: 1fr !important; gap: 36px !important; padding: 32px 0 56px !important; }
+      header[data-screen-label="Hero"] h1 { font-size: 38px !important; }
+      header[data-screen-label="Hero"] > div:last-child { justify-self: center !important; }
+      header[data-screen-label="Hero"] > div:last-child > div.washed { width: min(300px, 80vw) !important; height: 370px !important; }
+      nav.nav { flex-wrap: wrap !important; gap: 12px !important; }
+      nav.nav > div { gap: 8px !important; flex-wrap: wrap !important; }
+      nav.nav > div > a:not(.btn) { font-size: 14px; font-weight: 600; padding: 8px 16px; border-radius: 999px; background: var(--color-accent-100); color: var(--color-accent-800); }
+      nav.nav a.btn-primary { display: none !important; }
+      section[id] { padding: 28px 0 48px !important; }
+      #experience .card { grid-template-columns: 1fr !important; gap: 14px !important; padding: 24px !important; }
+      #projects > div { grid-template-columns: 1fr !important; }
+      #content > .card { grid-template-columns: 1fr !important; padding: 32px 26px !important; }
+      #skills { grid-template-columns: 1fr !important; gap: 40px !important; }
+      #contact > div:first-child { grid-template-columns: 1fr !important; padding: 36px 28px !important; }
+      #contact h2 { font-size: 30px !important; }
+      h2 { font-size: clamp(26px, 6vw, 34px); }
+    }
+    @media (max-width: 480px) {
+      header[data-screen-label="Hero"] h1 { font-size: 32px !important; }
+      header[data-screen-label="Hero"] > div:first-child > div:last-child { gap: 20px !important; flex-wrap: wrap; }
+    }
+    html { scroll-behavior: smooth; }
+    body { background: var(--color-bg); }
+    a { color: var(--color-accent); }
+    a:hover { color: var(--color-accent-600); }
+  </style>
+</helmet>
+<div style="max-width: 1120px; margin: 0 auto; padding: 0 clamp(18px, 4vw, 32px);">
+  <nav class="nav" style="padding: 22px 0;" data-screen-label="Nav">
+    <span class="nav-brand" style="font-size: 20px;">Jinay Nagar</span>
+    <div style="display: flex; gap: 26px; align-items: center;">
+      <a href="#experience">Experience</a>
+      <a href="#projects">Projects</a>
+      <a href="#content">Content</a>
+      <a href="#skills">Skills</a>
+      <a href="#contact" class="btn btn-primary" style="font-size: 14px;">Get in touch</a>
+    </div>
+  </nav>
+
+  <header data-screen-label="Hero" style="display: grid; grid-template-columns: 1.15fr 0.85fr; gap: 56px; align-items: center; padding: 64px 0 88px;">
+    <div>
+      <span class="tag tag-accent-2" style="margin-bottom: 18px;">GTM · Strategy · Growth</span>
+      <h1 style="font-size: 58px; margin: 14px 0 20px; text-wrap: balance;">I turn outreach, markets and stories into growth.</h1>
+      <p style="font-size: 18px; max-width: 52ch; color: var(--color-neutral-800);" class="">GTM and research operator. I've converted cold pipelines into 10+ partnerships, reported live markets to 2M viewers, and built AI workflows that make teams measurably faster. MSc Management, Imperial College London.</p>
+      <div style="display: flex; gap: 14px; margin-top: 30px; flex-wrap: wrap;">
+        <a class="btn btn-primary" href="#contact" style="font-size: 15px; padding: 12px 24px;">Work with me</a>
+        <a class="btn btn-secondary" href="uploads/Jinay Nagar CV-d76bd6e5.pdf" download style="font-size: 15px; padding: 12px 24px;">Download CV</a>
+      </div>
+      <div style="display: flex; gap: 34px; margin-top: 44px;">
+        <div><div style="font-family: var(--font-heading); font-size: 30px;">10+</div><div class="text-muted" style="font-size: 13px;">event partnerships closed</div></div>
+        <div><div style="font-family: var(--font-heading); font-size: 30px;">2M</div><div class="text-muted" style="font-size: 13px;">TV audience reached</div></div>
+        <div><div style="font-family: var(--font-heading); font-size: 30px; font-weight: 400;">448K</div><div class="text-muted" style="font-size: 13px;">YouTube views, last 365 days</div></div>
+      </div>
+    </div>
+    <div style="position: relative; justify-self: end;">
+      <div style="position: absolute; inset: -22px -22px auto auto; width: 130px; height: 130px; border-radius: 50%; background: var(--color-accent-2-200); z-index: 0;"></div>
+      <div style="position: absolute; bottom: -26px; left: -26px; width: 84px; height: 84px; border-radius: 50%; background: var(--color-accent-300); z-index: 0;"></div>
+      <div class="washed" style="position: relative; z-index: 1; width: 340px; height: 420px; border-radius: 170px 170px 44px 44px; overflow: hidden; box-shadow: var(--shadow-md);">
+        <img src="assets/jinay.png" alt="Jinay Nagar" style="width: 100%; height: 100%; object-fit: cover; object-position: top;">
+      </div>
+    </div>
+  </header>
+
+  <section id="experience" data-screen-label="Experience" style="padding: 40px 0 72px;">
+    <h6 style="color: var(--color-accent);">Experience</h6>
+    <h2 style="max-width: 20ch;">Three markets, one throughline: pipeline to outcome.</h2>
+    <div style="display: flex; flex-direction: column; gap: 22px; margin-top: 34px;">
+      <sc-for list="{{ jobs }}" as="job" hint-placeholder-count="3">
+        <div class="card elev-sm" style="display: grid; grid-template-columns: 220px 1fr; gap: 28px; padding: 30px 34px;">
+          <div>
+            <div class="card-kicker" style="font-size: 11px;">{{ job.dates }}</div>
+            <h3 style="font-size: 22px; margin: 8px 0 4px;">{{ job.company }}</h3>
+            <div class="text-muted" style="font-size: 13px;">{{ job.role }} · {{ job.place }}</div>
+          </div>
+          <ul style="margin: 0; padding-left: 18px; display: flex; flex-direction: column; gap: 10px; font-size: 15px; color: var(--color-neutral-800);">
+            <sc-for list="{{ job.points }}" as="pt" hint-placeholder-count="2">
+              <li>{{ pt }}</li>
+            </sc-for>
+          </ul>
+        </div>
+      </sc-for>
+    </div>
+  </section>
+
+  <section id="projects" data-screen-label="Projects" style="padding: 40px 0 72px;">
+    <h6 style="color: var(--color-accent);">Projects &amp; case studies</h6>
+    <h2 style="max-width: 22ch;">Strategy work with numbers attached.</h2>
+    <a href="https://drive.google.com/drive/folders/12pnpAg5GRHhvoC_N6LJkHv5Txgul454J?usp=sharing" target="_blank" rel="noopener" style="display: inline-block; margin-top: 10px; font-size: 15px; font-weight: 600;">View full case studies on Google Drive &rarr;</a>
+    <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 22px; margin-top: 34px;">
+      <sc-for list="{{ projects }}" as="proj" hint-placeholder-count="3">
+        <div class="card elev-sm" style="padding: 28px;">
+          <span class="tag tag-accent" style="align-self: flex-start;">{{ proj.tag }}</span>
+          <div class="card-title" style="font-size: 19px; margin-top: 6px;">{{ proj.title }}</div>
+          <p class="card-body" style="font-size: 14px;">{{ proj.body }}</p>
+          <div class="card-meta" style="font-family: var(--font-heading); font-size: 15px; color: var(--color-accent-700);">{{ proj.metric }}</div>
+        </div>
+      </sc-for>
+    </div>
+  </section>
+
+  <section id="content" data-screen-label="Content" style="padding: 40px 0 72px;">
+    <div class="card" style="background: var(--color-accent-2-800); color: var(--color-accent-2-100); padding: 52px 56px; display: grid; grid-template-columns: 1.2fr 0.8fr; gap: 40px; align-items: center;">
+      <div>
+        <h6 style="color: var(--color-accent-2-300);">Finance content</h6>
+        <h2 style="color: var(--color-neutral-100); max-width: 18ch;">448K views explaining markets, simply.</h2>
+        <p style="font-size: 16px; color: var(--color-accent-2-200); max-width: 48ch;">A finance education series built from scratch: short-form video on YouTube plus long-form writing on Substack. The same skill I used on live TV, turning market data into stories people actually watch.</p>
+        <div style="display: flex; gap: 14px; margin-top: 10px; flex-wrap: wrap;">
+          <a class="btn" href="https://www.youtube.com/@JinayNagar/shorts" target="_blank" rel="noopener" style="background: var(--color-accent-2-100); color: var(--color-accent-2-900);">YouTube</a>
+          <a class="btn" href="https://jinaynagar.substack.com/" target="_blank" rel="noopener" style="border: 1px solid var(--color-accent-2-400); color: var(--color-accent-2-100);">Substack</a>
+        </div>
+      </div>
+      <div style="display: flex; flex-direction: column; gap: 12px;">
+        <div style="background: var(--color-accent-2-700); border-radius: 999px; padding: 13px 26px; display: flex; justify-content: space-between; align-items: baseline;"><span style="font-size: 14px;">Views, last 365 days</span><span style="font-family: var(--font-heading); font-size: 20px; font-weight: 700;">448.1K</span></div>
+        <div style="background: var(--color-accent-2-700); border-radius: 999px; padding: 13px 26px; display: flex; justify-content: space-between; align-items: baseline;"><span style="font-size: 14px;">Watch time (hours)</span><span style="font-family: var(--font-heading); font-size: 20px; font-weight: 700;">1.9K</span></div>
+        <div style="background: var(--color-accent-2-700); border-radius: 999px; padding: 13px 26px; display: flex; justify-content: space-between; align-items: baseline;"><span style="font-size: 14px;">Subscribers gained</span><span style="font-family: var(--font-heading); font-size: 20px; font-weight: 700;">+350</span></div>
+        <div style="background: var(--color-accent-2-700); border-radius: 999px; padding: 13px 26px; display: flex; justify-content: space-between; align-items: baseline;"><span style="font-size: 14px;">Live TV segments delivered</span><span style="font-family: var(--font-heading); font-size: 20px; font-weight: 700;">200+</span></div>
+        <div style="background: var(--color-accent-2-700); border-radius: 999px; padding: 13px 26px; display: flex; justify-content: space-between; align-items: baseline;"><span style="font-size: 14px;">C-suite executives interviewed</span><span style="font-family: var(--font-heading); font-size: 20px; font-weight: 700;">50+</span></div>
+        <div style="font-size: 12px; color: var(--color-accent-2-300); padding: 2px 26px 0;">*As of 12th Aug 2026</div>
+      </div>
+    </div>
+  </section>
+
+  <section id="skills" data-screen-label="Skills" style="padding: 40px 0 72px; display: grid; grid-template-columns: 1fr 1fr; gap: 56px;">
+    <div>
+      <h6 style="color: var(--color-accent);">Skills &amp; tools</h6>
+      <h2>The stack I run on.</h2>
+      <div style="margin-top: 26px; display: flex; flex-direction: column; gap: 24px;">
+        <div>
+          <h5 style="margin-bottom: 12px;">GTM &amp; AI</h5>
+          <div style="display: flex; flex-wrap: wrap; gap: 8px;">
+            <sc-for list="{{ gtmTools }}" as="t" hint-placeholder-count="5"><span class="tag tag-accent">{{ t }}</span></sc-for>
+          </div>
+        </div>
+        <div>
+          <h5 style="margin-bottom: 12px;">Analysis</h5>
+          <div style="display: flex; flex-wrap: wrap; gap: 8px;">
+            <sc-for list="{{ analysisTools }}" as="t" hint-placeholder-count="4"><span class="tag tag-accent-2">{{ t }}</span></sc-for>
+          </div>
+        </div>
+        <div>
+          <h5 style="margin-bottom: 12px;">Languages</h5>
+          <div style="display: flex; flex-wrap: wrap; gap: 8px;">
+            <span class="tag tag-neutral">English</span>
+            <span class="tag tag-neutral">Hindi</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div>
+      <h6 style="color: var(--color-accent);">Certifications &amp; education</h6>
+      <h2>Credentialed, recently.</h2>
+      <div style="margin-top: 26px; display: flex; flex-direction: column; gap: 14px;">
+        <div class="card" style="padding: 20px 26px; flex-direction: row; justify-content: space-between; align-items: center; gap: 16px;"><span style="font-size: 15px;">McKinsey Forward Program</span><span class="text-muted" style="font-size: 13px; flex: none;">2026</span></div>
+        <div class="card" style="padding: 20px 26px; flex-direction: row; justify-content: space-between; align-items: center; gap: 16px;"><span style="font-size: 15px;">Bloomberg Market Concepts</span><span class="text-muted" style="font-size: 13px; flex: none;">2026</span></div>
+        <div class="card" style="padding: 20px 26px; flex-direction: row; justify-content: space-between; align-items: center; gap: 16px;"><span style="font-size: 15px;">Claude: Introduction to Agent Skills, Anthropic</span><span class="text-muted" style="font-size: 13px; flex: none;">2026</span></div>
+        <div class="card" style="padding: 20px 26px; flex-direction: row; justify-content: space-between; align-items: center; gap: 16px;"><span style="font-size: 15px;">Financial &amp; Valuation Modeling, Wall Street Prep</span><span class="text-muted" style="font-size: 13px; flex: none;">2025</span></div>
+        <div class="card elev-md" style="padding: 28px 30px; background: var(--color-accent-100); border: 2px solid var(--color-accent-300);">
+          <div style="display: flex; justify-content: space-between; align-items: center; gap: 12px;">
+            <div class="card-kicker">Aug 2025 – Aug 2026</div>
+            <span class="tag tag-accent" style="flex: none;">Latest</span>
+          </div>
+          <div class="card-title" style="font-size: 21px;">Imperial College London</div>
+          <p class="card-body" style="font-size: 14px;">MSc in Management (2:1) · Strategy, Marketing, Operations, Venture Capital, M&amp;A, Private Equity, Economics, Management Accounting</p>
+        </div>
+        <div class="card" style="padding: 22px 26px; background: var(--color-accent-2-100);">
+          <div class="card-kicker" style="color: var(--color-accent-2-700);">Sep 2020 – Jun 2023</div>
+          <div class="card-title">University of Mumbai</div>
+          <p class="card-body" style="font-size: 13px;">Bachelor in Commerce · 9.33/10 GPA. Equity Markets, Corporate Finance, Portfolio &amp; Risk Management</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="contact" data-screen-label="Contact" style="padding: 40px 0 90px;">
+    <div style="text-align: left; background: var(--color-surface); border-radius: calc(var(--radius-lg) * 1.5); padding: 64px; display: grid; grid-template-columns: 1fr auto; gap: 40px; align-items: center;">
+      <div>
+        <h2 style="font-size: 40px; max-width: 18ch;">Hiring for GTM, Strategy, Growth? Let's talk.</h2>
+        <p class="text-muted" style="font-size: 16px; max-width: 50ch;">Based in London. Open to full-time roles.</p>
+        <div style="display: flex; gap: 22px; margin-top: 18px; flex-wrap: wrap; font-size: 15px;">
+          <a href="mailto:jinaynagar@gmail.com">jinaynagar@gmail.com</a>
+          <a href="https://www.linkedin.com/in/jinaynagar/" target="_blank" rel="noopener">LinkedIn</a>
+        </div>
+      </div>
+      <a class="btn btn-primary" href="mailto:jinaynagar@gmail.com" style="font-size: 16px; padding: 16px 32px;">Email me</a>
+    </div>
+    <div class="text-muted" style="display: flex; justify-content: space-between; padding: 28px 4px 0; font-size: 13px;">
+      <span>© 2026 Jinay Nagar</span>
+      <span>London, UK</span>
+    </div>
+  </section>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;showAcademicProjects&quot;: {&quot;editor&quot;: &quot;boolean&quot;, &quot;default&quot;: true, &quot;tsType&quot;: &quot;boolean&quot;, &quot;section&quot;: &quot;Content&quot;}}">
+class Component extends DCLogic {
+  renderVals() {
+    const showCapstone = this.props.showAcademicProjects ?? true;
+    const jobs = [
+      { company: "Kickstart Global", role: "Partnerships & Outreach Associate", place: "London", dates: "May 2026 – Aug 2026", points: [
+        "Managed outbound partnerships end-to-end, securing 10 collaborations that drove 500+ attendees.",
+        "Built an AI research and outreach system with Claude agents to generate role-specific messaging at volume, making personalised outreach 30% faster.",
+      ]},
+      { company: "Times Network", role: "Business News Reporter", place: "Mumbai", dates: "Jan 2024 – Feb 2025", points: [
+        "Launched a new primetime show after spotting an unserved content gap; produced 10+ exclusive episodes.",
+        "Eliminated a research bottleneck with a Gen-AI workflow, cutting turnaround time by 40%.",
+        "Delivered 200+ live segments and interviewed 50+ C-suite executives for a 2M television audience, on daily deadlines.",
+      ]},
+      { company: "Blue Knight Capital", role: "GTM Associate", place: "Mumbai", dates: "Sep 2023 – Jan 2024", points: [
+        "Drove outbound client acquisition, adding 10 HNI clients and raising $30K in capital within 60 days.",
+        "Managed a $110K client book with company and investment analysis across 10+ portfolios.",
+      ]},
+    ];
+    const projects = [
+      { tag: "Consulting capstone", title: "India expansion GTM", body: "Recommended phased city-wise expansion and an omnichannel D2C strategy to grow presence across India.", metric: "Projected $1M MRR in 18 months" },
+      { tag: "Market entry", title: "UK go-to-market strategy", body: "Value proposition analysis, segmentation, competitive benchmarking and channel design, culminating in a retail operations launch.", metric: "Full launch playbook delivered" },
+      { tag: "AI systems", title: "Outreach engine at Kickstart", body: "Claude-agent research and messaging system producing role-specific outreach at volume for the partnerships pipeline.", metric: "30% faster personalised outreach" },
+    ];
+    return {
+      jobs,
+      projects: showCapstone ? projects : projects.slice(2),
+      gtmTools: ["Apollo", "Clay", "Attio", "Notion", "HubSpot", "Claude agents & skills"],
+      analysisTools: ["Power BI", "Excel (modelling & valuation)", "Bloomberg Terminal", "PowerPoint"],
+    };
+  }
+}
+</script>
+</body>
+</html>
