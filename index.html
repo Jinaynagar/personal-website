@@ -1,246 +1,459 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<script src="./support.js"></script>
+<meta name="robots" content="noindex">
+<title>The Long Game — Jinay Nagar</title>
+<meta name="description" content="A five-year run to $1M ARR, tracked.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#0A0E14; --ink-2:#111823; --line:#1E2836;
+  --amber:#F0A227; --bone:#E9E5DC; --slate:#5E7590;
+  --gain:#4C9E7A; --rust:#B4553C;
+  --mono:"JetBrains Mono", ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+}
+*{box-sizing:border-box;}
+html,body{margin:0;padding:0;background:var(--ink);}
+body{
+  color:var(--bone); font-family:var(--mono); font-size:13px; line-height:1.55;
+  -webkit-font-smoothing:antialiased; min-height:100vh;
+}
+.wrap{max-width:1120px;margin:0 auto;padding:26px clamp(18px,4vw,32px) 64px;}
+h1{font-size:26px;letter-spacing:.16em;font-weight:600;margin:0;}
+h2{font-size:12px;letter-spacing:.14em;font-weight:500;color:var(--slate);
+  margin:34px 0 12px;padding-bottom:7px;border-bottom:1px solid var(--line);
+  display:flex;justify-content:space-between;align-items:baseline;}
+p{margin:0;}
+ul,ol{list-style:none;margin:0;padding:0;}
+button{font:inherit;color:inherit;background:none;border:none;cursor:pointer;}
+button:focus-visible,a:focus-visible{outline:2px solid var(--amber);outline-offset:2px;}
+a{color:var(--slate);text-decoration:none;}
+a:hover{color:var(--bone);}
+
+.head{display:flex;justify-content:space-between;align-items:flex-start;gap:16px;
+  padding-bottom:16px;border-bottom:1px solid var(--line);flex-wrap:wrap;}
+.sub{color:var(--slate);font-size:12px;margin-top:6px;}
+.head-right{display:flex;align-items:center;gap:14px;font-size:11px;color:var(--slate);}
+.dot{width:6px;height:6px;border-radius:50%;background:var(--gain);display:inline-block;}
+.dot.off{background:var(--rust);}
+
+.curve-wrap{margin-top:22px;}
+svg.curve{width:100%;height:auto;display:block;overflow:visible;font-family:var(--mono);}
+.axis{stroke:var(--line);stroke-width:1;}
+.track{fill:none;stroke:var(--line);stroke-width:1.5;stroke-dasharray:3 5;}
+.trail{fill:none;stroke:var(--amber);stroke-width:2;stroke-linejoin:round;}
+.node circle{fill:var(--ink);stroke:var(--line);stroke-width:1.5;}
+.node.live circle{stroke:var(--amber);}
+.node.clear circle{fill:var(--amber);stroke:var(--amber);}
+.roman{fill:var(--slate);font-size:11px;text-anchor:middle;letter-spacing:.1em;}
+.node.clear .roman,.node.live .roman{fill:var(--amber);}
+.nlabel{fill:var(--slate);font-size:9px;text-anchor:middle;}
+.endlabel{fill:var(--bone);text-anchor:end;font-size:11px;}
+.marker circle{fill:none;stroke:var(--amber);stroke-width:1.5;}
+.marker .core{fill:var(--amber);}
+
+.readout{display:flex;justify-content:space-between;align-items:baseline;gap:16px;
+  flex-wrap:wrap;margin-top:14px;padding-top:12px;border-top:1px solid var(--line);}
+.big{font-size:34px;letter-spacing:-.02em;color:var(--amber);}
+.unit{color:var(--slate);font-size:12px;}
+.readout-meta{display:flex;gap:20px;color:var(--slate);font-size:11px;flex-wrap:wrap;}
+
+.cols{display:grid;grid-template-columns:minmax(0,300px) minmax(0,1fr);gap:44px;align-items:start;}
+@media (max-width:860px){.cols{grid-template-columns:1fr;gap:0;}}
+
+.stats li{margin-bottom:14px;}
+.stat-top{display:flex;justify-content:space-between;font-size:12px;}
+.stat-num{color:var(--amber);}
+.bar{height:3px;background:var(--line);margin:5px 0 4px;}
+.bar i{display:block;height:100%;background:var(--amber);}
+.stat-note{color:var(--slate);font-size:10.5px;line-height:1.4;}
+.side-note{color:var(--slate);font-size:11.5px;line-height:1.6;margin-bottom:12px;}
+
+.check{display:flex;align-items:flex-start;gap:10px;width:100%;text-align:left;
+  padding:7px 0;color:var(--slate);}
+.check:hover{color:var(--bone);}
+.check.on{color:var(--bone);}
+.box{flex:0 0 13px;width:13px;height:13px;border:1px solid var(--line);margin-top:3px;
+  display:flex;align-items:center;justify-content:center;font-size:11px;line-height:1;color:var(--ink);}
+.check:hover .box{border-color:var(--slate);}
+.check.on .box{background:var(--amber);border-color:var(--amber);}
+.check.gate.on .box{background:var(--gain);border-color:var(--gain);}
+.loop li{border-bottom:1px solid var(--line);}
+.loop-actions{display:flex;gap:8px;margin-top:14px;flex-wrap:wrap;}
+
+.btn{padding:8px 14px;border:1px solid var(--line);font-size:11.5px;letter-spacing:.04em;}
+.btn.primary{border-color:var(--amber);color:var(--amber);}
+.btn.primary:disabled{border-color:var(--line);color:var(--slate);cursor:not-allowed;}
+.btn.ghost{color:var(--slate);}
+.btn.ghost:hover{color:var(--bone);border-color:var(--slate);}
+
+.debuffs li{padding:10px 0;border-bottom:1px solid var(--line);}
+.debuff-name{color:var(--rust);font-size:12px;}
+.debuffs p{color:var(--slate);font-size:10.5px;line-height:1.5;margin-top:3px;}
+
+.act{border-bottom:1px solid var(--line);}
+.act-head{display:flex;align-items:center;gap:14px;width:100%;padding:14px 0;text-align:left;}
+.act-head:disabled{cursor:default;opacity:.42;}
+.act-roman{flex:0 0 26px;color:var(--slate);font-size:12px;letter-spacing:.1em;}
+.act.live .act-roman{color:var(--amber);}
+.act.clear .act-roman{color:var(--gain);}
+.act-title{flex:1;min-width:0;display:flex;flex-direction:column;gap:3px;}
+.act-name{font-size:14px;letter-spacing:.08em;}
+.act.clear .act-name{text-decoration:line-through;text-decoration-color:var(--gain);}
+.act-window{color:var(--slate);font-size:10.5px;}
+.act-count{color:var(--slate);font-size:11px;}
+
+.act-body{padding:2px 0 20px 40px;}
+@media (max-width:640px){.act-body{padding-left:0;}}
+.thesis{font-size:12.5px;line-height:1.65;max-width:64ch;color:var(--bone);}
+.boss{margin:14px 0 6px;padding:11px 13px;background:var(--ink-2);border-left:2px solid var(--rust);}
+.boss-name{color:var(--rust);font-size:11.5px;letter-spacing:.06em;}
+.boss p{color:var(--slate);font-size:11.5px;line-height:1.6;margin-top:5px;max-width:62ch;}
+.objs li{border-bottom:1px solid var(--line);}
+.objs li:last-child{border-bottom:none;}
+.obj-text{flex:1;font-size:12.5px;}
+.gate-tag{color:var(--gain);font-style:normal;font-size:10px;margin-left:8px;letter-spacing:.08em;}
+.xp{color:var(--line);font-size:10.5px;margin-top:2px;}
+.check.on .xp{color:var(--amber);}
+
+.count{color:var(--amber);}
+.achs{display:grid;grid-template-columns:repeat(auto-fill,minmax(178px,1fr));gap:1px;
+  background:var(--line);border:1px solid var(--line);}
+.achs li{background:var(--ink);padding:11px 12px;min-height:74px;}
+.ach-name{color:var(--line);font-size:12px;}
+.achs li.on .ach-name{color:var(--amber);}
+.achs p{color:var(--line);font-size:10.5px;line-height:1.45;margin-top:4px;}
+.achs li.on p{color:var(--slate);}
+
+.foot{margin-top:28px;padding-top:16px;border-top:1px solid var(--line);
+  display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;align-items:center;
+  color:var(--slate);font-size:11px;}
+
+.toast{position:fixed;left:50%;bottom:26px;transform:translateX(-50%);
+  background:var(--ink-2);border:1px solid var(--amber);padding:13px 20px;
+  max-width:340px;z-index:50;animation:rise .34s ease-out;}
+.toast-label{color:var(--amber);font-size:10px;letter-spacing:.14em;display:block;}
+.toast strong{display:block;font-size:15px;font-weight:600;margin:5px 0 4px;}
+.toast p{color:var(--slate);font-size:11px;line-height:1.5;}
+@keyframes rise{from{opacity:0;transform:translate(-50%,14px);}to{opacity:1;transform:translate(-50%,0);}}
+@media (prefers-reduced-motion:reduce){.toast{animation:none;}}
+</style>
 </head>
 <body>
-<x-dc>
-<helmet>
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="stylesheet" href="styles.css">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
-  <style>
-    :root { --font-heading: 'Inter', sans-serif; }
-    h1, h2, h3, h4, h5, h6 { font-weight: 700; letter-spacing: -0.02em; }
-    @media (max-width: 860px) {
-      header[data-screen-label="Hero"] { grid-template-columns: 1fr !important; gap: 36px !important; padding: 32px 0 56px !important; }
-      header[data-screen-label="Hero"] h1 { font-size: 38px !important; }
-      header[data-screen-label="Hero"] > div:last-child { justify-self: center !important; }
-      header[data-screen-label="Hero"] > div:last-child > div.washed { width: min(300px, 80vw) !important; height: 370px !important; }
-      nav.nav { flex-wrap: wrap !important; gap: 12px !important; }
-      nav.nav > div { gap: 8px !important; flex-wrap: wrap !important; }
-      nav.nav > div > a:not(.btn) { font-size: 14px; font-weight: 600; padding: 8px 16px; border-radius: 999px; background: var(--color-accent-100); color: var(--color-accent-800); }
-      nav.nav a.btn-primary { display: none !important; }
-      section[id] { padding: 28px 0 48px !important; }
-      #experience .card { grid-template-columns: 1fr !important; gap: 14px !important; padding: 24px !important; }
-      #projects > div { grid-template-columns: 1fr !important; }
-      #content > .card { grid-template-columns: 1fr !important; padding: 32px 26px !important; }
-      #skills { grid-template-columns: 1fr !important; gap: 40px !important; }
-      #contact > div:first-child { grid-template-columns: 1fr !important; padding: 36px 28px !important; }
-      #contact h2 { font-size: 30px !important; }
-      h2 { font-size: clamp(26px, 6vw, 34px); }
-    }
-    @media (max-width: 480px) {
-      header[data-screen-label="Hero"] h1 { font-size: 32px !important; }
-      header[data-screen-label="Hero"] > div:first-child > div:last-child { gap: 20px !important; flex-wrap: wrap; }
-    }
-    html { scroll-behavior: smooth; }
-    body { background: var(--color-bg); }
-    a { color: var(--color-accent); }
-    a:hover { color: var(--color-accent-600); }
-  </style>
-</helmet>
-<div style="max-width: 1120px; margin: 0 auto; padding: 0 clamp(18px, 4vw, 32px);">
-  <nav class="nav" style="padding: 22px 0;" data-screen-label="Nav">
-    <span class="nav-brand" style="font-size: 20px;">Jinay Nagar</span>
-    <div style="display: flex; gap: 26px; align-items: center;">
-      <a href="#experience">Experience</a>
-      <a href="#projects">Projects</a>
-      <a href="#content">Content</a>
-      <a href="#skills">Skills</a>
-      <a href="#contact" class="btn btn-primary" style="font-size: 14px;">Get in touch</a>
-    </div>
-  </nav>
-
-  <header data-screen-label="Hero" style="display: grid; grid-template-columns: 1.15fr 0.85fr; gap: 56px; align-items: center; padding: 64px 0 88px;">
+<div class="wrap">
+  <header class="head">
     <div>
-      <span class="tag tag-accent-2" style="margin-bottom: 18px;">GTM · Strategy · Growth</span>
-      <h1 style="font-size: 58px; margin: 14px 0 20px; text-wrap: balance;">I turn outreach, markets and stories into growth.</h1>
-      <p style="font-size: 18px; max-width: 52ch; color: var(--color-neutral-800);" class="">GTM and research operator. I've converted cold pipelines into 10+ partnerships, reported live markets to 2M viewers, and built AI workflows that make teams measurably faster. MSc Management, Imperial College London.</p>
-      <div style="display: flex; gap: 14px; margin-top: 30px; flex-wrap: wrap;">
-        <a class="btn btn-primary" href="#contact" style="font-size: 15px; padding: 12px 24px;">Work with me</a>
-        <a class="btn btn-secondary" href="uploads/Jinay Nagar CV-d76bd6e5.pdf" download style="font-size: 15px; padding: 12px 24px;">Download CV</a>
-      </div>
-      <div style="display: flex; gap: 34px; margin-top: 44px;">
-        <div><div style="font-family: var(--font-heading); font-size: 30px;">10+</div><div class="text-muted" style="font-size: 13px;">event partnerships closed</div></div>
-        <div><div style="font-family: var(--font-heading); font-size: 30px;">2M</div><div class="text-muted" style="font-size: 13px;">TV audience reached</div></div>
-        <div><div style="font-family: var(--font-heading); font-size: 30px; font-weight: 400;">448K</div><div class="text-muted" style="font-size: 13px;">YouTube views, last 365 days</div></div>
-      </div>
+      <h1>THE LONG GAME</h1>
+      <p class="sub">Jinay Nagar &middot; five-year run &middot; target $1M ARR by 2031</p>
     </div>
-    <div style="position: relative; justify-self: end;">
-      <div style="position: absolute; inset: -22px -22px auto auto; width: 130px; height: 130px; border-radius: 50%; background: var(--color-accent-2-200); z-index: 0;"></div>
-      <div style="position: absolute; bottom: -26px; left: -26px; width: 84px; height: 84px; border-radius: 50%; background: var(--color-accent-300); z-index: 0;"></div>
-      <div class="washed" style="position: relative; z-index: 1; width: 340px; height: 420px; border-radius: 170px 170px 44px 44px; overflow: hidden; box-shadow: var(--shadow-md);">
-        <img src="assets/jinay.png" alt="Jinay Nagar" style="width: 100%; height: 100%; object-fit: cover; object-position: top;">
-      </div>
+    <div class="head-right">
+      <a href="/">&larr; jinaynagar.vercel.app</a>
+      <span><span class="dot" id="dot"></span> <span id="savemsg">saved in this browser</span></span>
     </div>
   </header>
 
-  <section id="experience" data-screen-label="Experience" style="padding: 40px 0 72px;">
-    <h6 style="color: var(--color-accent);">Experience</h6>
-    <h2 style="max-width: 20ch;">Three markets, one throughline: pipeline to outcome.</h2>
-    <div style="display: flex; flex-direction: column; gap: 22px; margin-top: 34px;">
-      <sc-for list="{{ jobs }}" as="job" hint-placeholder-count="3">
-        <div class="card elev-sm" style="display: grid; grid-template-columns: 220px 1fr; gap: 28px; padding: 30px 34px;">
-          <div>
-            <div class="card-kicker" style="font-size: 11px;">{{ job.dates }}</div>
-            <h3 style="font-size: 22px; margin: 8px 0 4px;">{{ job.company }}</h3>
-            <div class="text-muted" style="font-size: 13px;">{{ job.role }} · {{ job.place }}</div>
-          </div>
-          <ul style="margin: 0; padding-left: 18px; display: flex; flex-direction: column; gap: 10px; font-size: 15px; color: var(--color-neutral-800);">
-            <sc-for list="{{ job.points }}" as="pt" hint-placeholder-count="2">
-              <li>{{ pt }}</li>
-            </sc-for>
-          </ul>
-        </div>
-      </sc-for>
+  <section class="curve-wrap" aria-label="Five-year progress curve">
+    <div id="curve"></div>
+    <div class="readout">
+      <div><span class="big" id="xp">0</span><span class="unit" id="xptotal"></span></div>
+      <div class="readout-meta"><span id="actnow"></span><span id="streakmsg"></span></div>
     </div>
   </section>
 
-  <section id="projects" data-screen-label="Projects" style="padding: 40px 0 72px;">
-    <h6 style="color: var(--color-accent);">Projects &amp; case studies</h6>
-    <h2 style="max-width: 22ch;">Strategy work with numbers attached.</h2>
-    <a href="https://drive.google.com/drive/folders/12pnpAg5GRHhvoC_N6LJkHv5Txgul454J?usp=sharing" target="_blank" rel="noopener" style="display: inline-block; margin-top: 10px; font-size: 15px; font-weight: 600;">View full case studies on Google Drive &rarr;</a>
-    <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 22px; margin-top: 34px;">
-      <sc-for list="{{ projects }}" as="proj" hint-placeholder-count="3">
-        <div class="card elev-sm" style="padding: 28px;">
-          <span class="tag tag-accent" style="align-self: flex-start;">{{ proj.tag }}</span>
-          <div class="card-title" style="font-size: 19px; margin-top: 6px;">{{ proj.title }}</div>
-          <p class="card-body" style="font-size: 14px;">{{ proj.body }}</p>
-          <div class="card-meta" style="font-family: var(--font-heading); font-size: 15px; color: var(--color-accent-700);">{{ proj.metric }}</div>
-        </div>
-      </sc-for>
-    </div>
-  </section>
+  <div class="cols">
+    <aside>
+      <h2>Starting build</h2>
+      <ul class="stats" id="stats"></ul>
 
-  <section id="content" data-screen-label="Content" style="padding: 40px 0 72px;">
-    <div class="card" style="background: var(--color-accent-2-800); color: var(--color-accent-2-100); padding: 52px 56px; display: grid; grid-template-columns: 1.2fr 0.8fr; gap: 40px; align-items: center;">
-      <div>
-        <h6 style="color: var(--color-accent-2-300);">Finance content</h6>
-        <h2 style="color: var(--color-neutral-100); max-width: 18ch;">448K views explaining markets, simply.</h2>
-        <p style="font-size: 16px; color: var(--color-accent-2-200); max-width: 48ch;">A finance education series built from scratch: short-form video on YouTube plus long-form writing on Substack. The same skill I used on live TV, turning market data into stories people actually watch.</p>
-        <div style="display: flex; gap: 14px; margin-top: 10px; flex-wrap: wrap;">
-          <a class="btn" href="https://www.youtube.com/@JinayNagar/shorts" target="_blank" rel="noopener" style="background: var(--color-accent-2-100); color: var(--color-accent-2-900);">YouTube</a>
-          <a class="btn" href="https://jinaynagar.substack.com/" target="_blank" rel="noopener" style="border: 1px solid var(--color-accent-2-400); color: var(--color-accent-2-100);">Substack</a>
-        </div>
-      </div>
-      <div style="display: flex; flex-direction: column; gap: 12px;">
-        <div style="background: var(--color-accent-2-700); border-radius: 999px; padding: 13px 26px; display: flex; justify-content: space-between; align-items: baseline;"><span style="font-size: 14px;">Views, last 365 days</span><span style="font-family: var(--font-heading); font-size: 20px; font-weight: 700;">448.1K</span></div>
-        <div style="background: var(--color-accent-2-700); border-radius: 999px; padding: 13px 26px; display: flex; justify-content: space-between; align-items: baseline;"><span style="font-size: 14px;">Watch time (hours)</span><span style="font-family: var(--font-heading); font-size: 20px; font-weight: 700;">1.9K</span></div>
-        <div style="background: var(--color-accent-2-700); border-radius: 999px; padding: 13px 26px; display: flex; justify-content: space-between; align-items: baseline;"><span style="font-size: 14px;">Subscribers gained</span><span style="font-family: var(--font-heading); font-size: 20px; font-weight: 700;">+350</span></div>
-        <div style="background: var(--color-accent-2-700); border-radius: 999px; padding: 13px 26px; display: flex; justify-content: space-between; align-items: baseline;"><span style="font-size: 14px;">Live TV segments delivered</span><span style="font-family: var(--font-heading); font-size: 20px; font-weight: 700;">200+</span></div>
-        <div style="background: var(--color-accent-2-700); border-radius: 999px; padding: 13px 26px; display: flex; justify-content: space-between; align-items: baseline;"><span style="font-size: 14px;">C-suite executives interviewed</span><span style="font-family: var(--font-heading); font-size: 20px; font-weight: 700;">50+</span></div>
-        <div style="font-size: 12px; color: var(--color-accent-2-300); padding: 2px 26px 0;">*As of 12th Aug 2026</div>
-      </div>
-    </div>
-  </section>
+      <h2>The weekly loop</h2>
+      <p class="side-note">Revenue is the score. This is the gameplay. Miss two weeks and the streak resets — that is
+        the only real failure state in the game.</p>
+      <ul class="loop" id="loop"></ul>
+      <div class="loop-actions" id="loopactions"></div>
 
-  <section id="skills" data-screen-label="Skills" style="padding: 40px 0 72px; display: grid; grid-template-columns: 1fr 1fr; gap: 56px;">
-    <div>
-      <h6 style="color: var(--color-accent);">Skills &amp; tools</h6>
-      <h2>The stack I run on.</h2>
-      <div style="margin-top: 26px; display: flex; flex-direction: column; gap: 24px;">
-        <div>
-          <h5 style="margin-bottom: 12px;">GTM &amp; AI</h5>
-          <div style="display: flex; flex-wrap: wrap; gap: 8px;">
-            <sc-for list="{{ gtmTools }}" as="t" hint-placeholder-count="5"><span class="tag tag-accent">{{ t }}</span></sc-for>
-          </div>
-        </div>
-        <div>
-          <h5 style="margin-bottom: 12px;">Analysis</h5>
-          <div style="display: flex; flex-wrap: wrap; gap: 8px;">
-            <sc-for list="{{ analysisTools }}" as="t" hint-placeholder-count="4"><span class="tag tag-accent-2">{{ t }}</span></sc-for>
-          </div>
-        </div>
-        <div>
-          <h5 style="margin-bottom: 12px;">Languages</h5>
-          <div style="display: flex; flex-wrap: wrap; gap: 8px;">
-            <span class="tag tag-neutral">English</span>
-            <span class="tag tag-neutral">Hindi</span>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div>
-      <h6 style="color: var(--color-accent);">Certifications &amp; education</h6>
-      <h2>Credentialed, recently.</h2>
-      <div style="margin-top: 26px; display: flex; flex-direction: column; gap: 14px;">
-        <div class="card" style="padding: 20px 26px; flex-direction: row; justify-content: space-between; align-items: center; gap: 16px;"><span style="font-size: 15px;">McKinsey Forward Program</span><span class="text-muted" style="font-size: 13px; flex: none;">2026</span></div>
-        <div class="card" style="padding: 20px 26px; flex-direction: row; justify-content: space-between; align-items: center; gap: 16px;"><span style="font-size: 15px;">Bloomberg Market Concepts</span><span class="text-muted" style="font-size: 13px; flex: none;">2026</span></div>
-        <div class="card" style="padding: 20px 26px; flex-direction: row; justify-content: space-between; align-items: center; gap: 16px;"><span style="font-size: 15px;">Claude: Introduction to Agent Skills, Anthropic</span><span class="text-muted" style="font-size: 13px; flex: none;">2026</span></div>
-        <div class="card" style="padding: 20px 26px; flex-direction: row; justify-content: space-between; align-items: center; gap: 16px;"><span style="font-size: 15px;">Financial &amp; Valuation Modeling, Wall Street Prep</span><span class="text-muted" style="font-size: 13px; flex: none;">2025</span></div>
-        <div class="card elev-md" style="padding: 28px 30px; background: var(--color-accent-100); border: 2px solid var(--color-accent-300);">
-          <div style="display: flex; justify-content: space-between; align-items: center; gap: 12px;">
-            <div class="card-kicker">Aug 2025 – Aug 2026</div>
-            <span class="tag tag-accent" style="flex: none;">Latest</span>
-          </div>
-          <div class="card-title" style="font-size: 21px;">Imperial College London</div>
-          <p class="card-body" style="font-size: 14px;">MSc in Management (2:1) · Strategy, Marketing, Operations, Venture Capital, M&amp;A, Private Equity, Economics, Management Accounting</p>
-        </div>
-        <div class="card" style="padding: 22px 26px; background: var(--color-accent-2-100);">
-          <div class="card-kicker" style="color: var(--color-accent-2-700);">Sep 2020 – Jun 2023</div>
-          <div class="card-title">University of Mumbai</div>
-          <p class="card-body" style="font-size: 13px;">Bachelor in Commerce · 9.33/10 GPA. Equity Markets, Corporate Finance, Portfolio &amp; Risk Management</p>
-        </div>
-      </div>
-    </div>
-  </section>
+      <h2>Debuffs</h2>
+      <ul class="debuffs" id="debuffs"></ul>
+    </aside>
 
-  <section id="contact" data-screen-label="Contact" style="padding: 40px 0 90px;">
-    <div style="text-align: left; background: var(--color-surface); border-radius: calc(var(--radius-lg) * 1.5); padding: 64px; display: grid; grid-template-columns: 1fr auto; gap: 40px; align-items: center;">
-      <div>
-        <h2 style="font-size: 40px; max-width: 18ch;">Hiring for GTM, Strategy, Growth? Let's talk.</h2>
-        <p class="text-muted" style="font-size: 16px; max-width: 50ch;">Based in London. Open to full-time roles.</p>
-        <div style="display: flex; gap: 22px; margin-top: 18px; flex-wrap: wrap; font-size: 15px;">
-          <a href="mailto:jinaynagar@gmail.com">jinaynagar@gmail.com</a>
-          <a href="https://www.linkedin.com/in/jinaynagar/" target="_blank" rel="noopener">LinkedIn</a>
-        </div>
+    <main>
+      <h2>The run</h2>
+      <ol id="acts"></ol>
+
+      <h2>Achievements <span class="count" id="achcount"></span></h2>
+      <ul class="achs" id="achs"></ul>
+
+      <div class="foot">
+        <span>Progress is stored in this browser only. Nobody else sees it.</span>
+        <button class="btn ghost" data-act="reset">Reset the run</button>
       </div>
-      <a class="btn btn-primary" href="mailto:jinaynagar@gmail.com" style="font-size: 16px; padding: 16px 32px;">Email me</a>
-    </div>
-    <div class="text-muted" style="display: flex; justify-content: space-between; padding: 28px 4px 0; font-size: 13px;">
-      <span>© 2026 Jinay Nagar</span>
-      <span>London, UK</span>
-    </div>
-  </section>
+    </main>
+  </div>
 </div>
-</x-dc>
-<script type="text/x-dc" data-dc-script data-props="{&quot;showAcademicProjects&quot;: {&quot;editor&quot;: &quot;boolean&quot;, &quot;default&quot;: true, &quot;tsType&quot;: &quot;boolean&quot;, &quot;section&quot;: &quot;Content&quot;}}">
-class Component extends DCLogic {
-  renderVals() {
-    const showCapstone = this.props.showAcademicProjects ?? true;
-    const jobs = [
-      { company: "Kickstart Global", role: "Partnerships & Outreach Associate", place: "London", dates: "May 2026 – Aug 2026", points: [
-        "Managed outbound partnerships end-to-end, securing 10 collaborations that drove 500+ attendees.",
-        "Built an AI research and outreach system with Claude agents to generate role-specific messaging at volume, making personalised outreach 30% faster.",
-      ]},
-      { company: "Times Network", role: "Business News Reporter", place: "Mumbai", dates: "Jan 2024 – Feb 2025", points: [
-        "Launched a new primetime show after spotting an unserved content gap; produced 10+ exclusive episodes.",
-        "Eliminated a research bottleneck with a Gen-AI workflow, cutting turnaround time by 40%.",
-        "Delivered 200+ live segments and interviewed 50+ C-suite executives for a 2M television audience, on daily deadlines.",
-      ]},
-      { company: "Blue Knight Capital", role: "GTM Associate", place: "Mumbai", dates: "Sep 2023 – Jan 2024", points: [
-        "Drove outbound client acquisition, adding 10 HNI clients and raising $30K in capital within 60 days.",
-        "Managed a $110K client book with company and investment analysis across 10+ portfolios.",
-      ]},
-    ];
-    const projects = [
-      { tag: "Consulting capstone", title: "India expansion GTM", body: "Recommended phased city-wise expansion and an omnichannel D2C strategy to grow presence across India.", metric: "Projected $1M MRR in 18 months" },
-      { tag: "Market entry", title: "UK go-to-market strategy", body: "Value proposition analysis, segmentation, competitive benchmarking and channel design, culminating in a retail operations launch.", metric: "Full launch playbook delivered" },
-      { tag: "AI systems", title: "Outreach engine at Kickstart", body: "Claude-agent research and messaging system producing role-specific outreach at volume for the partnerships pipeline.", metric: "30% faster personalised outreach" },
-    ];
-    return {
-      jobs,
-      projects: showCapstone ? projects : projects.slice(2),
-      gtmTools: ["Apollo", "Clay", "Attio", "Notion", "HubSpot", "Claude agents & skills"],
-      analysisTools: ["Power BI", "Excel (modelling & valuation)", "Bloomberg Terminal", "PowerPoint"],
-    };
+<div id="toastslot"></div>
+
+<script>
+/* ---------------- data ---------------- */
+const STATS=[
+ {name:"Distribution",value:8,note:"2M TV audience, 448K organic views"},
+ {name:"Selling",value:7,note:"$30K raised from cold HNIs"},
+ {name:"Analysis",value:8,note:"Modelling, valuation, filings"},
+ {name:"Building",value:5,note:"Ships with AI, not from scratch"},
+ {name:"Network",value:4,note:"One year in London"},
+ {name:"Capital",value:1,note:"No job, no runway"}
+];
+
+const ACTS=[
+{id:"a1",roman:"I",name:"GET PAID",window:"Now — Dec 2026",
+ thesis:"No income means no runway, no visa, no experiments. Everything downstream is fantasy until this clears.",
+ boss:"The Silent Inbox",
+ bossNote:"You will send 200 applications and hear nothing. It is not personal, it is the market — but it will feel personal at application 140.",
+ objectives:[
+  {id:"a1o1",text:"Move Hiring Lab out of 'extra curricular' and give it its own section with numbers",xp:20},
+  {id:"a1o2",text:"Point your own outreach agent at 25 founders and hiring managers directly",xp:40},
+  {id:"a1o3",text:"Five first conversations booked",xp:60},
+  {id:"a1o4",text:"Reach a final round somewhere",xp:80},
+  {id:"a1o5",text:"Sign an offer",xp:150,gate:true}]},
+{id:"a2",roman:"II",name:"LEARN ON SOMEONE ELSE'S MONEY",window:"2027 — 2028",
+ thesis:"Be inside a seed-to-Series-A company and watch revenue get made up close. Meanwhile rebuild the audience you switched off — it is the only asset that survives job changes, visa changes and failed products.",
+ boss:"Comfort",
+ bossNote:"A salary, a good team, and the goal quietly changes from 'build something' to 'get promoted'. This is how most versions of this plan end. Not with a failure — it just stops being mentioned.",
+ objectives:[
+  {id:"a2o1",text:"First post back online",xp:30},
+  {id:"a2o2",text:"Ten weeks published without a gap",xp:60},
+  {id:"a2o3",text:"Sit in on how a deal actually gets closed at work",xp:50},
+  {id:"a2o4",text:"Someone offers you something you never asked for",xp:80},
+  {id:"a2o5",text:"Fifty weeks published without a gap",xp:180,gate:true}]},
+{id:"a3",roman:"III",name:"FIRST POUND FROM A STRANGER",window:"2028 — 2029",
+ thesis:"Not a launch. Not a startup. One thing, sold, to someone with no connection to you. Hiring Lab already exists — the default is keep going, and switching should require an argument.",
+ boss:"The 8pm Wall",
+ bossNote:"Full day, then building at night. What breaks here is consistency, not ability.",
+ objectives:[
+  {id:"a3o1",text:"Pick the one thing. Stop starting new ones",xp:40},
+  {id:"a3o2",text:"Charge money before it feels ready",xp:60},
+  {id:"a3o3",text:"First payment from someone you have never met",xp:120},
+  {id:"a3o4",text:"A month where revenue grew while you did nothing",xp:100},
+  {id:"a3o5",text:"Ten paying strangers",xp:200,gate:true}]},
+{id:"a4",roman:"IV",name:"THE QUIT LINE",window:"2029 — 2030",
+ thesis:"Three consecutive months of side income above your London costs. Not one good month. Three.",
+ boss:"The Leap",
+ bossNote:"You will want certainty. It never arrives, and waiting past the gate is itself a decision.",
+ objectives:[
+  {id:"a4o1",text:"Side income clears rent",xp:100},
+  {id:"a4o2",text:"Clears everything — month one",xp:80},
+  {id:"a4o3",text:"Clears everything — month two",xp:80},
+  {id:"a4o4",text:"Clears everything — month three",xp:80},
+  {id:"a4o5",text:"Hand off something you used to do yourself",xp:120},
+  {id:"a4o6",text:"Resign",xp:250,gate:true}]},
+{id:"a5",roman:"V",name:"ONE MILLION",window:"2030 — 2031",
+ thesis:"4,000 individuals at £20 a month is a far harder machine than 50 organisations at £20K. Everything in Acts II and III should quietly bias you toward a buyer with a budget.",
+ boss:"Someone Funded",
+ bossNote:"A competitor with money copies your best feature and outspends you on the channel you built. Your defence is the audience, not the code.",
+ objectives:[
+  {id:"a5o1",text:"First contract paid by an organisation, not a person",xp:150},
+  {id:"a5o2",text:"£10K MRR",xp:200},
+  {id:"a5o3",text:"£25K MRR",xp:250},
+  {id:"a5o4",text:"£50K MRR",xp:300},
+  {id:"a5o5",text:"£83K MRR — one million a year",xp:500,gate:true}]}
+];
+
+const ACHIEVEMENTS=[
+ {id:"ach1",name:"First Offer",desc:"The first one changes your posture in every conversation after it.",on:["a1o5"]},
+ {id:"ach2",name:"Back on the Record",desc:"You started publishing again after switching it off.",on:["a2o1"]},
+ {id:"ach3",name:"The Warm Inbox",desc:"Someone came to you.",on:["a2o4"]},
+ {id:"ach4",name:"Fifty Weeks",desc:"A full year that left a public trace.",on:["a2o5"]},
+ {id:"ach5",name:"First Stranger",desc:"Money from outside your network. This is the real starting line.",on:["a3o3"]},
+ {id:"ach6",name:"Ghost Revenue",desc:"It grew while you were asleep.",on:["a3o4"]},
+ {id:"ach7",name:"Ramen",desc:"Your own work covers your rent.",on:["a4o1"]},
+ {id:"ach8",name:"Fire Yourself",desc:"Someone else does a job that used to be yours.",on:["a4o5"]},
+ {id:"ach9",name:"No Safety Net",desc:"You resigned.",on:["a4o6"]},
+ {id:"ach10",name:"Employer Pays",desc:"A budget holder signed, not a job seeker.",on:["a5o1"]},
+ {id:"ach11",name:"Consistency",desc:"Four weeks of the loop, unbroken.",streak:4},
+ {id:"ach12",name:"The Quarter",desc:"Twelve weeks of the loop, unbroken.",streak:12},
+ {id:"ach13",name:"One Million",desc:"Five years. You said you would.",on:["a5o5"]}
+];
+
+const LOOP=[
+ {id:"l1",text:"Talked to one person who could hire you, buy from you, or teach you"},
+ {id:"l2",text:"Shipped one thing"},
+ {id:"l3",text:"Put your work in front of people who had never seen it"}
+];
+
+const DEBUFFS=[
+ {name:"Prestige trap",desc:"Taking the impressive logo over the role where you learn to sell. The logo helps for two years. The skill helps for thirty."},
+ {name:"The invisible year",desc:"Any twelve months that left no public trace. That year did not compound."},
+ {name:"Building as procrastination",desc:"Shipping features gives instant feedback. Selling gives rejection. Guess which one moves the number."}
+];
+
+const TOTAL_XP=ACTS.reduce((s,a)=>s+a.objectives.reduce((t,o)=>t+o.xp,0),0);
+const KEY="longgame:jinay:v1";
+const NODES=[{x:40,y:214},{x:196,y:200},{x:352,y:176},{x:508,y:128},{x:664,y:46},{x:780,y:18}];
+
+/* ---------------- state ---------------- */
+let S={done:{},week:{},streak:0,best:0,open:"a1"};
+let known=null;
+
+function load(){
+  try{
+    const raw=localStorage.getItem(KEY);
+    if(raw){const d=JSON.parse(raw);S={...S,...d};}
+    return true;
+  }catch(e){return false;}
+}
+function save(){
+  try{localStorage.setItem(KEY,JSON.stringify(S));return true;}catch(e){return false;}
+}
+const storageOK=load();
+
+/* ---------------- derived ---------------- */
+function xpNow(){return ACTS.reduce((s,a)=>s+a.objectives.reduce((t,o)=>t+(S.done[o.id]?o.xp:0),0),0);}
+function actStates(){
+  const out={};let unlocked=true;
+  for(const a of ACTS){
+    const gate=a.objectives.find(o=>o.gate);
+    const hit=a.objectives.filter(o=>S.done[o.id]).length;
+    const cleared=gate?!!S.done[gate.id]:hit===a.objectives.length;
+    out[a.id]={unlocked,hit,total:a.objectives.length,cleared};
+    unlocked=unlocked&&cleared;
+  }
+  return out;
+}
+function achNow(){
+  const s=new Set();
+  for(const a of ACHIEVEMENTS){
+    if(a.on&&a.on.every(o=>S.done[o]))s.add(a.id);
+    if(a.streak&&S.best>=a.streak)s.add(a.id);
+  }
+  return s;
+}
+function pointAt(t){
+  const total=NODES.length-1;
+  const sc=Math.min(Math.max(t,0),1)*total;
+  const i=Math.min(Math.floor(sc),total-1);
+  const f=sc-i;
+  return{x:NODES[i].x+(NODES[i+1].x-NODES[i].x)*f,y:NODES[i].y+(NODES[i+1].y-NODES[i].y)*f};
+}
+function pathTo(t){
+  const total=NODES.length-1;
+  const sc=Math.min(Math.max(t,0),1)*total;
+  const i=Math.min(Math.floor(sc),total-1);
+  const pts=NODES.slice(0,i+1).map(p=>p.x+","+p.y);
+  const e=pointAt(t);pts.push(e.x+","+e.y);
+  return "M "+pts.join(" L ");
+}
+const esc=s=>String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
+
+/* ---------------- render ---------------- */
+function render(){
+  const st=actStates(), xp=xpNow(), prog=xp/TOTAL_XP, m=pointAt(prog);
+
+  document.getElementById("curve").innerHTML=
+    '<svg viewBox="0 0 820 250" class="curve" role="img" aria-label="'+Math.round(prog*100)+' percent of the run complete">'
+    +'<line x1="0" y1="232" x2="820" y2="232" class="axis"/>'
+    +'<path d="M '+NODES.map(p=>p.x+","+p.y).join(" L ")+'" class="track"/>'
+    +'<path d="'+pathTo(prog)+'" class="trail"/>'
+    +ACTS.map((a,i)=>{const s=st[a.id],p=NODES[i];
+      return '<g class="node '+(s.cleared?"clear":s.unlocked?"live":"locked")+'">'
+      +'<circle cx="'+p.x+'" cy="'+p.y+'" r="5"/>'
+      +'<text x="'+p.x+'" y="'+(p.y-16)+'" class="roman">'+a.roman+'</text>'
+      +'<text x="'+p.x+'" y="248" class="nlabel">'+esc(a.window.split(" — ")[0])+'</text></g>';}).join("")
+    +'<g class="marker"><circle cx="'+m.x+'" cy="'+m.y+'" r="8"/><circle cx="'+m.x+'" cy="'+m.y+'" r="3.2" class="core"/></g>'
+    +'<text x="780" y="10" class="nlabel endlabel">$1M</text></svg>';
+
+  const cur=ACTS.find(a=>!st[a.id].cleared)||ACTS[ACTS.length-1];
+  document.getElementById("xp").textContent=xp.toLocaleString();
+  document.getElementById("xptotal").textContent=" / "+TOTAL_XP.toLocaleString()+" xp";
+  document.getElementById("actnow").textContent="Act "+cur.roman+" · "+cur.name.toLowerCase();
+  document.getElementById("streakmsg").textContent=S.streak+" week streak"+(S.best>S.streak?" · best "+S.best:"");
+
+  document.getElementById("stats").innerHTML=STATS.map(s=>
+    '<li><div class="stat-top"><span>'+esc(s.name)+'</span><span class="stat-num">'+s.value+'</span></div>'
+    +'<div class="bar"><i style="width:'+(s.value*10)+'%"></i></div>'
+    +'<p class="stat-note">'+esc(s.note)+'</p></li>').join("");
+
+  document.getElementById("loop").innerHTML=LOOP.map(l=>
+    '<li><button class="check'+(S.week[l.id]?" on":"")+'" data-act="week" data-id="'+l.id+'" aria-pressed="'+(!!S.week[l.id])+'">'
+    +'<span class="box" aria-hidden="true">'+(S.week[l.id]?"×":"")+'</span><span>'+esc(l.text)+'</span></button></li>').join("");
+
+  const full=LOOP.every(l=>S.week[l.id]);
+  document.getElementById("loopactions").innerHTML=
+    '<button class="btn primary" data-act="logweek"'+(full?"":" disabled")+'>'+(full?"Log the week":"Finish all three")+'</button>'
+    +(S.streak>0?'<button class="btn ghost" data-act="breakstreak">Missed a week</button>':"");
+
+  document.getElementById("debuffs").innerHTML=DEBUFFS.map(d=>
+    '<li><span class="debuff-name">'+esc(d.name)+'</span><p>'+esc(d.desc)+'</p></li>').join("");
+
+  document.getElementById("acts").innerHTML=ACTS.map(a=>{
+    const s=st[a.id], open=S.open===a.id;
+    let h='<li class="act '+(s.cleared?"clear":s.unlocked?"live":"locked")+'">'
+      +'<button class="act-head" data-act="toggleact" data-id="'+a.id+'" aria-expanded="'+open+'"'+(s.unlocked?"":" disabled")+'>'
+      +'<span class="act-roman">'+a.roman+'</span><span class="act-title">'
+      +'<span class="act-name">'+esc(a.name)+'</span>'
+      +'<span class="act-window">'+(s.unlocked?esc(a.window):"Locked until the act before it clears")+'</span></span>'
+      +'<span class="act-count">'+s.hit+'/'+s.total+'</span></button>';
+    if(open&&s.unlocked){
+      h+='<div class="act-body"><p class="thesis">'+esc(a.thesis)+'</p>'
+        +'<div class="boss"><span class="boss-name">Boss · '+esc(a.boss)+'</span><p>'+esc(a.bossNote)+'</p></div><ul class="objs">'
+        +a.objectives.map(o=>'<li><button class="check'+(S.done[o.id]?" on":"")+(o.gate?" gate":"")+'" data-act="obj" data-id="'+o.id+'" aria-pressed="'+(!!S.done[o.id])+'">'
+        +'<span class="box" aria-hidden="true">'+(S.done[o.id]?"×":"")+'</span>'
+        +'<span class="obj-text">'+esc(o.text)+(o.gate?'<em class="gate-tag">gate</em>':"")+'</span>'
+        +'<span class="xp">'+o.xp+'</span></button></li>').join("")
+        +'</ul></div>';
+    }
+    return h+'</li>';
+  }).join("");
+
+  const ac=achNow();
+  document.getElementById("achcount").textContent=ac.size+"/"+ACHIEVEMENTS.length;
+  document.getElementById("achs").innerHTML=ACHIEVEMENTS.map(a=>{
+    const on=ac.has(a.id);
+    return '<li class="'+(on?"on":"")+'"><span class="ach-name">'+(on?esc(a.name):"—")+'</span>'
+    +'<p>'+(on?esc(a.desc):"Locked")+'</p></li>';}).join("");
+
+  if(known===null){known=ac;}
+  else{
+    const fresh=[...ac].filter(id=>!known.has(id));
+    known=ac;
+    if(fresh.length)toast(ACHIEVEMENTS.find(x=>x.id===fresh[fresh.length-1]));
+  }
+
+  if(!storageOK){
+    document.getElementById("dot").classList.add("off");
+    document.getElementById("savemsg").textContent="not saving — storage blocked";
   }
 }
+
+let toastTimer;
+function toast(a){
+  if(!a)return;
+  const slot=document.getElementById("toastslot");
+  slot.innerHTML='<div class="toast" role="status"><span class="toast-label">Achievement unlocked</span>'
+    +'<strong>'+esc(a.name)+'</strong><p>'+esc(a.desc)+'</p></div>';
+  clearTimeout(toastTimer);
+  toastTimer=setTimeout(()=>{slot.innerHTML="";},4200);
+}
+
+/* ---------------- events ---------------- */
+document.addEventListener("click",e=>{
+  const b=e.target.closest("[data-act]");
+  if(!b)return;
+  const act=b.dataset.act, id=b.dataset.id;
+  if(act==="obj")S.done[id]=!S.done[id];
+  else if(act==="week")S.week[id]=!S.week[id];
+  else if(act==="toggleact")S.open=(S.open===id?null:id);
+  else if(act==="logweek"){S.streak+=1;S.best=Math.max(S.best,S.streak);S.week={};}
+  else if(act==="breakstreak")S.streak=0;
+  else if(act==="reset"){
+    if(!confirm("Reset everything? This clears all progress and achievements."))return;
+    S={done:{},week:{},streak:0,best:0,open:"a1"};known=null;
+  }
+  save();render();
+});
+
+render();
 </script>
 </body>
 </html>
